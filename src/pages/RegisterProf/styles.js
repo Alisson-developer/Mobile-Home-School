@@ -10,18 +10,18 @@ export default StyleSheet.create({
     },
 
     title: {
+        alignSelf: 'center',
         fontSize: 38,
         fontWeight: 'bold',
         color: '#b00fff',
-        marginVertical: 20
+        marginVertical: 20,
     },
 
     form: {
         alignSelf: 'stretch',
-        paddingHorizontal: 30,
-        bottom: 20,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
-        marginVertical: 50,
+        marginVertical: '50%',
         borderRadius: 20
     },
 
@@ -52,12 +52,11 @@ export default StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         borderRadius: 10,
-        marginVertical: 20
+        marginVertical: 10
     },
 
     textButton: {
         fontSize: 22,
-        color: '#fff',
-        fontWeight: 'bold'
+        color: '#fff'
     }
 })

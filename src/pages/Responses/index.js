@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Entypo } from '@expo/vector-icons'
 import { View, Text, TouchableOpacity, SectionList, AsyncStorage, ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import NetInfo from '@react-native-community/netinfo'
 
 import styles from './styles'
 
@@ -9,6 +10,7 @@ import api from '../../services/api'
 
 import ModalResponse from '../../components/ModalResponse'
 import ButtonAlert from '../../components/ButtonAlert'
+import AlertInternet from '../../components/AlertInternet'
 
 export default function Responses(){
     const [exercises, setExercises] = useState([])
@@ -16,6 +18,7 @@ export default function Responses(){
     const [visibility, setVisibility] = useState(true)
     const [loading, setLoading] = useState(false)
     const [classe, setClasse] = useState('')
+    const [isInternet, setIsInternet] = useState(false)
     
     useEffect(() => {
         api.get('/exercises').then(response => {
@@ -36,6 +39,12 @@ export default function Responses(){
             setClasse(turma)
         })
     }, [])
+
+    useEffect(() => {
+        NetInfo.fetch().then(status => {
+            setIsInternet(status.isInternetReachable)
+        })
+    }, [])
     
     const filteredExercises = exercises.filter(exerc => exerc.classe.includes(classe))
 
@@ -45,7 +54,7 @@ export default function Responses(){
                 <ActivityIndicator size={100} color="#b00fff" />
             </View>
         )
-    }else{
+    }else if(isInternet){
         return (
             <View style={styles.dashboardContainer}>
                 <ButtonAlert visibility={visibility} setVisibility={setVisibility} />
@@ -75,7 +84,7 @@ export default function Responses(){
                                             setLoading(false)
                                         }}
                                     />
-                                    <Text style={styles.linkWebText}>Acessar conteudo</Text>
+                                    <Text style={styles.linkWebText}>Acessar conteúdo</Text>
                                 </View>
                                 <Text style={styles.labelHeaderText}><Text style={styles.strong}>Disciplina: </Text>{exercise.discipline} </Text>
                                 <Text style={styles.labelHeaderText}><Text style={styles.strong}>Assunto: </Text>{exercise.title} </Text>
@@ -92,7 +101,7 @@ export default function Responses(){
                                         await AsyncStorage.setItem('exerc_id', String(exercise.id))
                                         setIsVisible(true)
                                     }}>
-                                <Text style={styles.labelText}>Responder Exercício</Text>
+                                <Text style={styles.textButton}>Responder Exercício</Text>
                             </TouchableOpacity>
                             
                         </View>
@@ -100,5 +109,7 @@ export default function Responses(){
                 />
                 
             </View>
-    )}
+    )}else{
+        return <AlertInternet />
+    }
 }
